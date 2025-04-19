@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}{{ book.name }} - 閱讀進度{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('progress.index') }}">閱讀進度</a></li>
+                <li class="breadcrumb-item active">{{ book.name }}</li>
+            </ol>
+        </nav>
+
+        <h2>{{ book.name }}</h2>
+        <p class="lead">請點擊已讀的章節，標記您的閱讀進度。</p>
+
+        {% set read_percentage = (chapters_read|length / total_chapters * 100)|round(1) %}
+        <div class="progress mb-3">
+            <div class="progress-bar {{ 'bg-success' if read_percentage == 100 else 'bg-primary' }}" role="progressbar" style="width: {{ read_percentage }}%" aria-valuenow="{{ read_percentage }}" aria-valuemin="0" aria-valuemax="100">{{ read_percentage }}%</div>
+        </div>
+
+        <p>{{ chapters_read|length }}/{{ total_chapters }} 章已讀</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h4 class="card-title mb-0">章節</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    {% for chapter in chapter_range %}
+                    <div class="col-2 col-md-1 mb-3">
+                        <button class="chapter-toggle btn btn-{{ chapter in chapters_read and 'success' or 'outline-secondary' }} w-100" data-book-id="{{ book.id }}" data-chapter="{{ chapter }}">
+                            {{ chapter }}
+                        </button>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    $('.chapter-toggle').click(function() {
+        var bookId = $(this).data('book-id');
+        var chapter = $(this).data('chapter');
+        var button = $(this);
+
+        $.ajax({
+            url: '/api/progress/toggle-chapter',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                book_id: bookId,
+                chapter: chapter
+            }),
+            success: function(response) {
+                if (response.is_read) {
+                    button.removeClass('btn-outline-secondary').addClass('btn-success');
+                } else {
+                    button.removeClass('btn-success').addClass('btn-outline-secondary');
+                }
+
+                // Update progress bar and count
+                var readCount = response.chapters_read.length;
+                var totalChapters = {{ total_chapters }};
+                var percentage = (readCount / totalChapters * 100).toFixed(1);
+
+                $('.progress-bar').css('width', percentage + '%').attr('aria-valuenow', percentage).text(percentage + '%');
+                if (percentage == 100) {
+                    $('.progress-bar').removeClass('bg-primary').addClass('bg-success');
+                } else {
+                    $('.progress-bar').removeClass('bg-success').addClass('bg-primary');
+                }
+
+                $('p').text(readCount + '/' + totalChapters + ' 章已讀');
+            },
+            error: function() {
+                alert('發生錯誤，請重試。');
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

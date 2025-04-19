@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}閱讀進度 - 征服聖經 2.0{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <h2>閱讀進度</h2>
+        <p class="lead">在這裡您可以查看和更新您的聖經閱讀進度。</p>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-12">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link {{ 'active' if testament == 'OT' else '' }}" href="{{ url_for('progress.index', testament='OT') }}">舊約</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ 'active' if testament == 'NT' else '' }}" href="{{ url_for('progress.index', testament='NT') }}">新約</a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h4 class="card-title mb-0">{{ '舊約' if testament == 'OT' else '新約' }}書卷</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    {% for book in books %}
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ book.name }}</h5>
+                                {% set chapters_read = user_progress[book.id]|length %}
+                                {% set percentage = (chapters_read / book.chapters * 100)|round(1) %}
+
+                                <div class="progress mb-2">
+                                    <div class="progress-bar {{ 'bg-success' if percentage == 100 else 'bg-primary' }}" role="progressbar" style="width: {{ percentage }}%" aria-valuenow="{{ percentage }}" aria-valuemin="0" aria-valuemax="100">{{ percentage }}%</div>
+                                </div>
+
+                                <p class="card-text">{{ chapters_read }}/{{ book.chapters }} 章已讀</p>
+
+                                <a href="{{ url_for('progress.book_detail', book_id=book.id) }}" class="btn btn-outline-primary">查看章節</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

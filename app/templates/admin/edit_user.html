@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}編輯使用者 - {{ user.username }}{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('admin.index') }}">管理者後台</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('admin.user_detail', user_id=user.id) }}">{{ user.username }}</a></li>
+                <li class="breadcrumb-item active">編輯</li>
+            </ol>
+        </nav>
+
+        <h2>編輯使用者</h2>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h4 class="card-title mb-0">使用者資訊</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">帳號</label>
+                        <input type="text" id="username" name="username" class="form-control" value="{{ user.username }}" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="name" class="form-label">名稱</label>
+                        <input type="text" id="name" name="name" class="form-control" value="{{ user.name or '' }}">
+                        <small class="text-muted">使用者的顯示名稱</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="password" class="form-label">密碼</label>
+                        <input type="password" id="password" name="password" class="form-control">
+                        <small class="text-muted">僅在需要變更密碼時填寫</small>
+                    </div>
+
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="is_admin" name="is_admin" {% if user.is_admin %}checked{% endif %}>
+                        <label class="form-check-label" for="is_admin">管理者權限</label>
+                        <small class="d-block text-muted">擁有管理者權限可以管理所有使用者</small>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ url_for('admin.user_detail', user_id=user.id) }}" class="btn btn-secondary">取消</a>
+                        <button type="submit" class="btn btn-primary">儲存變更</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-info text-white">
+                <h4 class="card-title mb-0">操作提示</h4>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled">
+                    <li class="mb-2"><i class="fas fa-info-circle text-info"></i> 帳號名稱是使用者登入的主要識別資訊。</li>
+                    <li class="mb-2"><i class="fas fa-info-circle text-info"></i> 名稱是顯示給使用者的名稱，可以隨時變更。</li>
+                    <li class="mb-2"><i class="fas fa-info-circle text-info"></i> 如果不需要變更密碼，請將密碼欄位留空。</li>
+                    <li class="mb-2"><i class="fas fa-exclamation-triangle text-warning"></i> 請謹慎給予管理者權限！</li>
+                </ul>
+            </div>
+        </div>
+
+        {% if not user.is_admin %}
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-danger text-white">
+                <h4 class="card-title mb-0">危險操作區</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('admin.delete_user', user_id=user.id) }}" onsubmit="return confirm('確定要刪除此使用者嗎？此操作無法復原！');">
+                    <p><i class="fas fa-exclamation-triangle text-danger"></i> 刪除此使用者及其所有資料。此操作無法復原！</p>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-danger">刪除使用者</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% block title %}{{ user.username }} - 使用者詳情{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('admin.index') }}">管理者後台</a></li>
+                <li class="breadcrumb-item active">{{ user.username }}</li>
+            </ol>
+        </nav>
+
+        <div class="d-flex justify-content-between align-items-center">
+            <h2>{{ user.name or user.username }}</h2>
+            <div>
+                <a href="{{ url_for('admin.edit_user', user_id=user.id) }}" class="btn btn-warning">
+                    <i class="fas fa-edit"></i> 編輯使用者
+                </a>
+                {% if not user.is_admin %}
+                <form method="POST" action="{{ url_for('admin.delete_user', user_id=user.id) }}" class="d-inline" onsubmit="return confirm('確定要刪除此使用者嗎？此操作無法復原！');">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> 刪除使用者
+                    </button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-header bg-primary text-white">
+                <h4 class="card-title mb-0">基本資訊</h4>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <tr>
+                        <th>ID</th>
+                        <td>{{ user.id }}</td>
+                    </tr>
+                    <tr>
+                        <th>帳號</th>
+                        <td>{{ user.username }}</td>
+                    </tr>
+                    <tr>
+                        <th>名稱</th>
+                        <td>{{ user.name or '尚未設定' }}</td>
+                    </tr>
+                    <tr>
+                        <th>管理者</th>
+                        <td>
+                            {% if user.is_admin %}
+                            <span class="badge bg-success">是</span>
+                            {% else %}
+                            <span class="badge bg-secondary">否</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>開始日期</th>
+                        <td>{{ user.start_date.strftime('%Y-%m-%d') if user.start_date else '未設定' }}</td>
+                    </tr>
+                    <tr>
+                        <th>目標天數</th>
+                        <td>{{ user.target_days or '未設定' }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card shadow-sm h-100">
+            <div class="card-header bg-primary text-white">
+                <h4 class="card-title mb-0">閱讀進度</h4>
+            </div>
+            <div class="card-body">
+                <div class="mb-4">
+                    <h5>舊約 <span class="float-end">{{ ot_percentage }}%</span></h5>
+                    <div class="progress">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: {{ ot_percentage }}%" aria-valuenow="{{ ot_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <h5>新約 <span class="float-end">{{ nt_percentage }}%</span></h5>
+                    <div class="progress">
+                        <div class="progress-bar bg-info" role="progressbar" style="width: {{ nt_percentage }}%" aria-valuenow="{{ nt_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <h5>總體進度 <span class="float-end">{{ total_percentage }}%</span></h5>
+                    <div class="progress">
+                        <div class="progress-bar bg-primary" role="progressbar" style="width: {{ total_percentage }}%" aria-valuenow="{{ total_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <h5>目標進度 <span class="float-end">{{ target_percentage }}%</span></h5>
+                    <div class="progress">
+                        <div class="progress-bar bg-warning" role="progressbar" style="width: {{ target_percentage }}%" aria-valuenow="{{ target_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <h5>完整讀完聖經次數</h5>
+                    <p class="display-4 text-center">{{ completion_count }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h4 class="card-title mb-0">快速操作</h4>
+            </div>
+            <div class="card-body">
+                <a href="{{ url_for('progress.index', testament='OT') }}" class="btn btn-outline-primary me-2">
+                    <i class="fas fa-book"></i> 查看舊約進度
+                </a>
+                <a href="{{ url_for('progress.index', testament='NT') }}" class="btn btn-outline-primary me-2">
+                    <i class="fas fa-book"></i> 查看新約進度
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

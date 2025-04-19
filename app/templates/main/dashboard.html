@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}儀表板 - 征服聖經 2.0{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <h2 class="mb-3">您好，{{ user.name }}！</h2>
+        <p class="lead">這是您的聖經閱讀進度儀表板。</p>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-6 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h4 class="card-title mb-0">閱讀進度</h4>
+            </div>
+            <div class="card-body">
+                <div class="mb-4">
+                    <h5>舊約 <span class="float-end">{{ ot_percentage }}%</span></h5>
+                    <div class="progress">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: {{ ot_percentage }}%" aria-valuenow="{{ ot_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <h5>新約 <span class="float-end">{{ nt_percentage }}%</span></h5>
+                    <div class="progress">
+                        <div class="progress-bar bg-info" role="progressbar" style="width: {{ nt_percentage }}%" aria-valuenow="{{ nt_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
+                <div>
+                    <h5>總體進度 <span class="float-end">{{ total_percentage }}%</span></h5>
+                    <div class="progress">
+                        <div class="progress-bar bg-primary" role="progressbar" style="width: {{ total_percentage }}%" aria-valuenow="{{ total_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h4 class="card-title mb-0">目標追蹤</h4>
+            </div>
+            <div class="card-body">
+                <div class="mb-4">
+                    <h5>目標進度 <span class="float-end">{{ target_percentage }}%</span></h5>
+                    <div class="progress">
+                        <div class="progress-bar bg-warning" role="progressbar" style="width: {{ target_percentage }}%" aria-valuenow="{{ target_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <small class="text-muted">根據您設定的目標日期計算的預期進度</small>
+                </div>
+                <div class="mb-3">
+                    <h5>實際進度 vs 目標進度</h5>
+                    <div class="progress">
+                        <div class="progress-bar bg-primary" role="progressbar" style="width: {{ total_percentage }}%" aria-valuenow="{{ total_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <div class="progress mt-2">
+                        <div class="progress-bar bg-warning" role="progressbar" style="width: {{ target_percentage }}%" aria-valuenow="{{ target_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
+                {% if total_percentage >= target_percentage %}
+                <div class="alert alert-success">
+                    <i class="fas fa-thumbs-up"></i> 恭喜！您的進度超前於目標進度！
+                </div>
+                {% else %}
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i> 您的進度略微落後於目標，加油！
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <i class="fas fa-trophy fa-3x text-warning mb-3"></i>
+                <h3 class="display-4">{{ completion_count }}</h3>
+                <p class="lead">完整讀完聖經次數</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <i class="fas fa-calendar-day fa-3x text-info mb-3"></i>
+                <h3 class="display-4">{{ chapters_per_day }}</h3>
+                <p class="lead">每日建議閱讀章節</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <i class="fas fa-book-reader fa-3x text-success mb-3"></i>
+                <div class="d-grid">
+                    <a href="{{ url_for('progress.index') }}" class="btn btn-primary btn-lg">更新閱讀進度</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

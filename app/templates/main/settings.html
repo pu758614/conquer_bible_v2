@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}個人設定 - 征服聖經 2.0{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12 mb-4">
+        <h2>個人設定</h2>
+        <p class="lead">在這裡您可以設定閱讀目標和其他個人資訊。</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-primary text-white">
+                <h4 class="card-title mb-0">閱讀目標設定</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="start_date" class="form-label">開始日期</label>
+                        <input type="date" id="start_date" name="start_date" class="form-control" value="{{ user.start_date.strftime('%Y-%m-%d') if user.start_date else '' }}">
+                        <small class="text-muted">從何時開始計算您的閱讀目標</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="target_days" class="form-label">預計閱讀時間（天數）</label>
+                        <input type="number" id="target_days" name="target_days" class="form-control" value="{{ user.target_days or '' }}" min="1">
+                        <small class="text-muted">預計多少天內完成閱讀整本聖經</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <p>根據您的設定，您每天需要閱讀 <strong>{{ chapters_per_day }}</strong> 章才能達成目標。</p>
+                        <p>全部聖經共有 <strong>{{ total_chapters }}</strong> 章。</p>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">儲存設定</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-danger text-white">
+                <h4 class="card-title mb-0">重置進度</h4>
+            </div>
+            <div class="card-body">
+                <p>點擊下方按鈕將會重置您的所有閱讀進度。此操作不可逆！</p>
+                <form method="POST" onsubmit="return confirm('確定要重置您的所有閱讀進度嗎？此操作無法復原！');">
+                    <input type="hidden" name="reset" value="true">
+                    <button type="submit" class="btn btn-danger">重置所有進度</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-info text-white">
+                <h4 class="card-title mb-0">小提示</h4>
+            </div>
+            <div class="card-body">
+                <p><i class="fas fa-lightbulb text-warning"></i> 設定合理的目標有助於保持閱讀聖經的動力！</p>
+                <p><i class="fas fa-lightbulb text-warning"></i> 考慮使用1年（365天）作為第一個目標。</p>
+                <p><i class="fas fa-lightbulb text-warning"></i> 如果進度落後，不要氣餒，可以調整目標天數。</p>
+                <p><i class="fas fa-lightbulb text-warning"></i> 養成每天固定時間閱讀的習慣。</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

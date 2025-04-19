@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}征服聖經 2.0 - 追蹤你的讀經進度{% endblock %}
+
+{% block content %}
+<div class="row align-items-center py-5">
+    <div class="col-md-6">
+        <h1 class="display-4 fw-bold">征服聖經 2.0</h1>
+        <p class="lead">幫助您追蹤讀經進度，設立目標，確保您能讀完整本聖經。</p>
+        <hr>
+        <p>聖經是基督徒靈命成長的重要資源，但有時候我們需要一些幫助來保持閱讀的紀律。
+           征服聖經 2.0 可以幫助您：</p>
+        <ul class="list-group list-group-flush mb-4">
+            <li class="list-group-item"><i class="fas fa-check-circle text-success"></i> 記錄您的讀經進度</li>
+            <li class="list-group-item"><i class="fas fa-check-circle text-success"></i> 設立個人目標</li>
+            <li class="list-group-item"><i class="fas fa-check-circle text-success"></i> 追蹤完成情況</li>
+            <li class="list-group-item"><i class="fas fa-check-circle text-success"></i> 計算每日建議閱讀量</li>
+        </ul>
+
+        <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+            <a href="{{ url_for('auth.login') }}" class="btn btn-primary btn-lg px-4 me-md-2">登入</a>
+            <a href="{{ url_for('auth.register') }}" class="btn btn-outline-secondary btn-lg px-4">註冊</a>
+        </div>
+    </div>
+    <div class="col-md-6 text-center">
+        <img src="{{ url_for('static', filename='images/bible-reading.png') }}" alt="Bible Reading" class="img-fluid rounded shadow" style="max-height: 400px;">
+    </div>
+</div>
+
+<div class="row my-5">
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <i class="fas fa-book fa-3x text-primary mb-3"></i>
+                <h3 class="card-title">追蹤進度</h3>
+                <p class="card-text">輕鬆記錄您已閱讀的章節，隨時查看您在舊約和新約的進度。</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <i class="fas fa-bullseye fa-3x text-primary mb-3"></i>
+                <h3 class="card-title">設立目標</h3>
+                <p class="card-text">設定您想要在多久時間內完成聖經閱讀，我們會計算每日應讀章節。</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <i class="fas fa-chart-line fa-3x text-primary mb-3"></i>
+                <h3 class="card-title">統計分析</h3>
+                <p class="card-text">查看您的進度統計，了解您是否跟上了目標進度，以及已經完整讀過聖經幾次。</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/dummy_image.js') }}"></script>
+{% endblock %}

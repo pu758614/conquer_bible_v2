@@ -1,0 +1,87 @@
+from flask import Blueprint, render_template, redirect, url_for, flash, request
+from flask_login import login_user, logout_user, login_required, current_user
+from app import db
+from app.models.user import User
+
+auth = Blueprint('auth', __name__)
+
+@auth.route('/login', methods=['GET', 'POST'])
+def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('main.dashboard'))
+
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+
+        user = User.query.filter_by(username=username).first()
+        if user and user.verify_password(password):
+            login_user(user)
+            next_page = request.args.get('next')
+
+            # If user does not have a name, redirect to profile setup
+            if not user.name:
+                flash('請輸入您的名稱以完成註冊', 'info')
+                return redirect(url_for('auth.profile_setup'))
+
+            return redirect(next_page or url_for('main.dashboard'))
+        else:
+            flash('登入失敗，請檢查您的帳號和密碼', 'danger')
+
+    return render_template('auth/login.html')
+
+@auth.route('/register', methods=['GET', 'POST'])
+def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('main.dashboard'))
+
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        confirm_password = request.form.get('confirm_password')
+
+        if password != confirm_password:
+            flash('密碼不一致', 'danger')
+            return render_template('auth/register.html')
+
+        existing_user = User.query.filter_by(username=username).first()
+        if existing_user:
+            flash('帳號已經存在', 'danger')
+            return render_template('auth/register.html')
+
+        new_user = User(username=username, password=password)
+        db.session.add(new_user)
+        db.session.commit()
+
+        flash('註冊成功，請登入', 'success')
+        return redirect(url_for('auth.login'))
+
+    return render_template('auth/register.html')
+
+@auth.route('/profile-setup', methods=['GET', 'POST'])
+@login_required
+def profile_setup():
+    if current_user.name:
+        return redirect(url_for('main.dashboard'))
+
+    if request.method == 'POST':
+        name = request.form.get('name')
+
+        if not name:
+            flash('請輸入您的名稱', 'danger')
+            return render_template('auth/profile_setup.html')
+
+        current_user.name = name
+        db.session.commit()
+
+        flash('個人資料設定成功', 'success')
+        return redirect(url_for('main.dashboard'))
+
+    return render_template('auth/profile_setup.html')
+
+@auth.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash('您已成功登出', 'success')
+    return redirect(url_for('auth.login'))
