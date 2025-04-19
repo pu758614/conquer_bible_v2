@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 
-{% block title %}儀表板 - 征服聖經 2.0{% endblock %}
+{% block title %}目前進度 - 征服白波2.0{% endblock %}
 
 {% block content %}
 <div class="row mb-4">
     <div class="col-md-12">
         <h2 class="mb-3">您好，{{ user.name }}！</h2>
-        <p class="lead">這是您的聖經閱讀進度儀表板。</p>
+        <p class="lead">這是您的聖經閱讀進度概覽。</p>
     </div>
 </div>
 
@@ -79,9 +79,10 @@
     <div class="col-md-4 mb-4">
         <div class="card h-100 shadow-sm">
             <div class="card-body text-center">
-                <i class="fas fa-trophy fa-3x text-warning mb-3"></i>
-                <h3 class="display-4">{{ completion_count }}</h3>
-                <p class="lead">完整讀完聖經次數</p>
+                <i class="fas fa-book-reader fa-3x text-success mb-3"></i>
+                <div class="d-grid">
+                    <a href="{{ url_for('progress.index') }}" class="btn btn-primary btn-lg">我要征服!!</a>
+                </div>
             </div>
         </div>
     </div>
@@ -97,10 +98,9 @@
     <div class="col-md-4 mb-4">
         <div class="card h-100 shadow-sm">
             <div class="card-body text-center">
-                <i class="fas fa-book-reader fa-3x text-success mb-3"></i>
-                <div class="d-grid">
-                    <a href="{{ url_for('progress.index') }}" class="btn btn-primary btn-lg">更新閱讀進度</a>
-                </div>
+                <i class="fas fa-trophy fa-3x text-warning mb-3"></i>
+                <h3 class="display-4">{{ completion_count }}</h3>
+                <p class="lead">完整讀完聖經次數</p>
             </div>
         </div>
     </div>

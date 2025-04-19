@@ -33,8 +33,8 @@
             <div class="card-body">
                 <div class="row">
                     {% for chapter in chapter_range %}
-                    <div class="col-2 col-md-1 mb-3">
-                        <button class="chapter-toggle btn btn-{{ chapter in chapters_read and 'success' or 'outline-secondary' }} w-100" data-book-id="{{ book.id }}" data-chapter="{{ chapter }}">
+                    <div class="col-3 col-md-2 mb-3">
+                        <button class="chapter-toggle btn btn-{{ chapter in chapters_read and 'success' or 'outline-secondary' }} w-100 py-3 d-flex align-items-center justify-content-center" data-book-id="{{ book.id }}" data-chapter="{{ chapter }}" style="font-size: 1.1rem; min-height: 3.5rem;">
                             {{ chapter }}
                         </button>
                     </div>

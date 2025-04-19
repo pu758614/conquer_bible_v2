@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- 背景 -->
+  <rect width="200" height="200" fill="#FFFF99" opacity="0.7"/>
+
+  <!-- 書本 -->
+  <path d="M40 60L100 30L160 60L100 90L40 60Z" fill="#9966CC"/>
+  <path d="M40 60L40 140L100 170L100 90L40 60Z" fill="#9933FF"/>
+  <path d="M160 60L160 140L100 170L100 90L160 60Z" fill="#9933FF"/>
+
+  <!-- HOLYBIBLE 文字 -->
+  <text x="70" y="110" font-family="Arial" font-weight="bold" font-size="16" fill="white">HOLY</text>
+  <text x="65" y="130" font-family="Arial" font-weight="bold" font-size="16" fill="white">BIBLE</text>
+
+  <!-- 頭部 -->
+  <ellipse cx="100" cy="50" rx="25" ry="20" fill="#FFFFCC"/>
+
+  <!-- 耳朵 -->
+  <path d="M80 40C75 30 70 35 75 45" fill="#FFFFCC" stroke="#333333" stroke-width="1.5"/>
+  <path d="M120 40C125 30 130 35 125 45" fill="#FFFFCC" stroke="#333333" stroke-width="1.5"/>
+
+  <!-- 眼睛 -->
+  <circle cx="90" cy="50" r="3" fill="#333333"/>
+  <circle cx="110" cy="50" r="3" fill="#333333"/>
+
+  <!-- 鼻子 -->
+  <path d="M95 55L100 60L105 55" stroke="#333333" stroke-width="1.5" fill="none"/>
+
+  <!-- 笑容 -->
+  <path d="M85 65C90 70 110 70 115 65" stroke="#333333" stroke-width="1.5" fill="none"/>
+</svg>
