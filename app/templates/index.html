@@ -1,63 +1,92 @@
 {% extends "base.html" %}
 
-{% block title %}征服聖經 2.0 - 追蹤你的讀經進度{% endblock %}
+{% block title %}征服白波 2.0 - 追蹤你的讀經進度{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/literary_style.css') }}">
+{% endblock %}
 
 {% block content %}
-<div class="row align-items-center py-5">
-    <div class="col-md-6">
-        <h1 class="display-4 fw-bold">征服聖經 2.0</h1>
-        <p class="lead">幫助您追蹤讀經進度，設立目標，確保您能讀完整本聖經。</p>
-        <hr>
-        <p>聖經是基督徒靈命成長的重要資源，但有時候我們需要一些幫助來保持閱讀的紀律。
-           征服聖經 2.0 可以幫助您：</p>
-        <ul class="list-group list-group-flush mb-4">
-            <li class="list-group-item"><i class="fas fa-check-circle text-success"></i> 記錄您的讀經進度</li>
-            <li class="list-group-item"><i class="fas fa-check-circle text-success"></i> 設立個人目標</li>
-            <li class="list-group-item"><i class="fas fa-check-circle text-success"></i> 追蹤完成情況</li>
-            <li class="list-group-item"><i class="fas fa-check-circle text-success"></i> 計算每日建議閱讀量</li>
-        </ul>
+<div class="hero-section mb-5">
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <h1 class="display-5 mb-3">探索聖經之旅 ✨</h1>
+            <p class="lead mb-4">記錄、追蹤和深入閱讀上帝的話語，建立每日與聖經相伴的美好習慣。</p>
 
-        <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-            <a href="{{ url_for('auth.login') }}" class="btn btn-primary btn-lg px-4 me-md-2">登入</a>
-            <a href="{{ url_for('auth.register') }}" class="btn btn-outline-secondary btn-lg px-4">註冊</a>
+            <ul class="list-group feature-list mb-4">
+                <li class="list-group-item"><i class="fas fa-check-circle"></i> 輕鬆記錄您的讀經進度</li>
+                <li class="list-group-item"><i class="fas fa-check-circle"></i> 設立個人目標與計畫</li>
+                <li class="list-group-item"><i class="fas fa-check-circle"></i> 視覺化追蹤完成情況</li>
+                <li class="list-group-item"><i class="fas fa-check-circle"></i> 智能計算每日建議閱讀量</li>
+            </ul>
+
+            <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                <a href="{{ url_for('auth.login') }}" class="btn btn-literary btn-lg px-4 me-md-2">開始旅程</a>
+                <a href="{{ url_for('auth.register') }}" class="btn btn-outline-literary btn-lg px-4">註冊新帳號</a>
+            </div>
         </div>
-    </div>
-    <div class="col-md-6 text-center">
-        <img src="{{ url_for('static', filename='images/bible-reading.png') }}" alt="Bible Reading" class="img-fluid rounded shadow" style="max-height: 400px;">
+        <div class="col-md-6">
+            <div class="bible-image-container">
+                <!-- 圖像將由 JS 動態生成 -->
+            </div>
+        </div>
     </div>
 </div>
 
-<div class="row my-5">
+<div class="bg-quote">
+    <div class="row">
+        <div class="col-md-10 mx-auto text-center">
+            <p>"你的話是我腳前的燈，是我路上的光。" — 詩篇 119:105</p>
+        </div>
+    </div>
+</div>
+
+<div class="row my-5 features-row">
     <div class="col-md-4 mb-4">
-        <div class="card h-100 shadow-sm">
+        <div class="card feature-card h-100">
             <div class="card-body text-center">
-                <i class="fas fa-book fa-3x text-primary mb-3"></i>
-                <h3 class="card-title">追蹤進度</h3>
-                <p class="card-text">輕鬆記錄您已閱讀的章節，隨時查看您在舊約和新約的進度。</p>
+                <i class="fas fa-book feature-icon"></i>
+                <h3>追蹤進度</h3>
+                <p>輕鬆記錄您已閱讀的章節，隨時查看您在舊約和新約的閱讀進度，建立持之以恆的閱讀習慣。</p>
+                <div class="feature-button mt-3">
+                    <a href="{{ url_for('auth.login') }}" class="btn btn-sm btn-outline-literary">立即開始 →</a>
+                </div>
             </div>
         </div>
     </div>
     <div class="col-md-4 mb-4">
-        <div class="card h-100 shadow-sm">
+        <div class="card feature-card h-100">
             <div class="card-body text-center">
-                <i class="fas fa-bullseye fa-3x text-primary mb-3"></i>
-                <h3 class="card-title">設立目標</h3>
-                <p class="card-text">設定您想要在多久時間內完成聖經閱讀，我們會計算每日應讀章節。</p>
+                <i class="fas fa-bullseye feature-icon"></i>
+                <h3>設立目標</h3>
+                <p>設定您想要在多久時間內完成聖經閱讀，我們會為您計算每日建議閱讀章節，協助您達成目標。</p>
+                <div class="feature-button mt-3">
+                    <a href="{{ url_for('auth.login') }}" class="btn btn-sm btn-outline-literary">設定目標 →</a>
+                </div>
             </div>
         </div>
     </div>
     <div class="col-md-4 mb-4">
-        <div class="card h-100 shadow-sm">
+        <div class="card feature-card h-100">
             <div class="card-body text-center">
-                <i class="fas fa-chart-line fa-3x text-primary mb-3"></i>
-                <h3 class="card-title">統計分析</h3>
-                <p class="card-text">查看您的進度統計，了解您是否跟上了目標進度，以及已經完整讀過聖經幾次。</p>
+                <i class="fas fa-chart-line feature-icon"></i>
+                <h3>統計分析</h3>
+                <p>透過視覺化統計圖表了解您的閱讀進度，查看您是否跟上了預定目標，以及已經完整閱讀聖經的次數。</p>
+                <div class="feature-button mt-3">
+                    <a href="{{ url_for('auth.login') }}" class="btn btn-sm btn-outline-literary">查看統計 →</a>
+                </div>
             </div>
         </div>
     </div>
+</div>
+
+<div class="text-center my-5 call-to-action">
+    <h2 class="mb-4">準備好開始您的聖經閱讀之旅了嗎？</h2>
+    <p class="lead mb-4">加入我們，與成千上萬的信徒一起建立穩定的讀經習慣！</p>
+    <a href="{{ url_for('auth.register') }}" class="btn btn-literary btn-lg px-5 py-3">立即註冊，開始征服！</a>
 </div>
 {% endblock %}
 
 {% block extra_js %}
-<script src="{{ url_for('static', filename='js/dummy_image.js') }}"></script>
+<script src="{{ url_for('static', filename='js/literary_image.js') }}"></script>
 {% endblock %}
