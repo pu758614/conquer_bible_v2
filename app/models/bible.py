@@ -21,6 +21,7 @@ class ReadingProgress(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     book_id = db.Column(db.Integer, db.ForeignKey('bible_books.id'))
     chapters_read = db.Column(db.JSON, default=list)  # List of chapter numbers that have been read
+    chapters_timestamps = db.Column(db.JSON, default=dict)  # Dict mapping chapter numbers to timestamps
 
     def __repr__(self):
         return f'<ReadingProgress User {self.user_id} Book {self.book_id}>'

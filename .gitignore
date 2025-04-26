@@ -1,1 +1,59 @@
+# Python
 *.pyc
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Flask
+instance/
+.webassets-cache
+.env
+.flaskenv
+
+# Database
+*.sqlite
+*.db
+
+# Docker
+.dockerignore
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Migrations
+migrations/versions/__pycache__/
+migrations/__pycache__/
+migrations/README
+migrations/alembic.ini
+migrations/env.py
+migrations/script.py.mako

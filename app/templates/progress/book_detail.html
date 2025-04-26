@@ -33,8 +33,14 @@
             <div class="card-body">
                 <div class="row">
                     {% for chapter in chapter_range %}
+                    {% set is_read = chapter in chapters_read %}
+                    {% set timestamp = chapters_timestamps.get(chapter|string, '') %}
                     <div class="col-3 col-md-2 mb-3">
-                        <button class="chapter-toggle btn btn-{{ chapter in chapters_read and 'success' or 'outline-secondary' }} w-100 py-3 d-flex align-items-center justify-content-center" data-book-id="{{ book.id }}" data-chapter="{{ chapter }}" style="font-size: 1.1rem; min-height: 3.5rem;">
+                        <button class="chapter-toggle btn {{ 'btn-info' if is_read else 'btn-outline-secondary' }} w-100 py-3 d-flex align-items-center justify-content-center"
+                            data-book-id="{{ book.id }}"
+                            data-chapter="{{ chapter }}"
+                            {% if is_read and timestamp %}title="讀於 {{ timestamp }}"{% endif %}
+                            style="font-size: 1.1rem; min-height: 3.5rem; {% if is_read %}background-color: #5bc0de; border-color: #5bc0de;{% endif %}">
                             {{ chapter }}
                         </button>
                     </div>
@@ -49,9 +55,12 @@
 {% block extra_js %}
 <script>
 $(document).ready(function() {
+    // Initialize tooltips (using Bootstrap's tooltip)
+    $('[title]').tooltip();
+
     $('.chapter-toggle').click(function() {
-        var bookId = $(this).data('book-id');
-        var chapter = $(this).data('chapter');
+        var bookId = parseInt($(this).data('book-id'));
+        var chapter = parseInt($(this).data('chapter'));
         var button = $(this);
 
         $.ajax({
@@ -64,9 +73,26 @@ $(document).ready(function() {
             }),
             success: function(response) {
                 if (response.is_read) {
-                    button.removeClass('btn-outline-secondary').addClass('btn-success');
+                    button.removeClass('btn-outline-secondary').addClass('btn-info');
+                    button.css({
+                        'background-color': '#5bc0de',
+                        'border-color': '#5bc0de'
+                    });
+                    // Update tooltip with timestamp
+                    if (response.timestamp) {
+                        button.attr('title', '讀於 ' + response.timestamp);
+                        button.tooltip('dispose'); // Remove previous tooltip
+                        button.tooltip(); // Reinitialize with new content
+                    }
                 } else {
-                    button.removeClass('btn-success').addClass('btn-outline-secondary');
+                    button.removeClass('btn-info').addClass('btn-outline-secondary');
+                    button.css({
+                        'background-color': '',
+                        'border-color': ''
+                    });
+                    // Remove tooltip
+                    button.tooltip('dispose');
+                    button.removeAttr('title');
                 }
 
                 // Update progress bar and count
@@ -83,7 +109,9 @@ $(document).ready(function() {
 
                 $('p').text(readCount + '/' + totalChapters + ' 章已讀');
             },
-            error: function() {
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+                console.log('Response:', xhr.responseText);
                 alert('發生錯誤，請重試。');
             }
         });
