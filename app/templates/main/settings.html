@@ -31,8 +31,8 @@
                     </div>
 
                     <div class="mb-3">
-                        <p>根據您的設定，您每天需要閱讀 <strong>{{ chapters_per_day }}</strong> 章才能達成目標。</p>
-                        <p>全部聖經共有 <strong>{{ total_chapters }}</strong> 章。</p>
+                        <p>根據您的設定，您每天需要閱讀 <strong id="chapters_per_day_display">{{ chapters_per_day }}</strong> 章才能達成目標。</p>
+                        <p>全部聖經共有 <strong id="total_chapters_display">{{ total_chapters }}</strong> 章。</p>
                     </div>
 
                     <button type="submit" class="btn btn-primary">儲存設定</button>
@@ -68,4 +68,27 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    // 總章節數
+    const totalChapters = {{ total_chapters }};
+
+    // 監聽預計閱讀時間輸入框變化
+    $('#target_days').on('input', function() {
+        const targetDays = parseInt($(this).val());
+        if (targetDays && targetDays > 0) {
+            // 計算每天需要閱讀的章數
+            const chaptersPerDay = (totalChapters / targetDays).toFixed(1);
+            // 更新顯示
+            $('#chapters_per_day_display').text(chaptersPerDay);
+        } else {
+            // 如果輸入無效，顯示預設值或空值
+            $('#chapters_per_day_display').text('--');
+        }
+    });
+});
+</script>
 {% endblock %}
