@@ -1,0 +1,43 @@
+# fly.toml app configuration file generated for conquer-bible-v2 on 2025-05-07T19:19:13+08:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'conquer-bible-v2'
+primary_region = 'hkg'
+
+[build]
+  dockerfile = 'Dockerfile'
+
+[env]
+  PORT = '9527'
+
+[deploy]
+  release_command = "python init_db.py"
+
+[http_service]
+  internal_port = 9527
+  force_https = true
+  auto_stop_machines = false
+  auto_start_machines = true
+  min_machines_running = 1
+  processes = ['app']
+
+[[services]]
+  protocol = ''
+  internal_port = 0
+  processes = ["app"]
+
+  [[services.ports]]
+    port = 80
+    handlers = ['http']
+    force_https = true
+
+  [[services.ports]]
+    port = 443
+    handlers = ['tls', 'http']
+
+[[vm]]
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 1
