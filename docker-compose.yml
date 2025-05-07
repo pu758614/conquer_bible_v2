@@ -4,12 +4,12 @@ services:
   web:
     build: .
     ports:
-      - "9527:5000"
+      - "9527:9527"
     volumes:
       - .:/app
     environment:
       - FLASK_APP=app.py
-      - FLASK_ENV=development
+      # - FLASK_ENV=development
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/bible_app
     depends_on:
       - db
