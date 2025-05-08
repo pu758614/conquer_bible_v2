@@ -40,6 +40,44 @@
             </div>
         </div>
 
+        <!-- 新增自動登入連結區塊 -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-success text-white">
+                <h4 class="card-title mb-0">專屬連結</h4>
+            </div>
+            <div class="card-body">
+                <p>您可以產生一個專屬連結，使用此連結即可直接登入系統，無需輸入帳號密碼。</p>
+                <p class="text-danger"><i class="fas fa-exclamation-triangle"></i> 注意：請勿將此連結分享給他人，以免他人未經授權使用您的帳號。</p>
+
+                {% if auto_login_url %}
+                <div class="mb-3">
+                    <label class="form-label">您的專屬連結</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="auto_login_url" value="{{ auto_login_url }}" readonly>
+                        <button class="btn btn-outline-secondary" type="button" id="copy_link_btn">
+                            <i class="fas fa-copy"></i> 複製
+                        </button>
+                    </div>
+                    <small class="text-muted">點擊複製按鈕將連結複製到剪貼簿</small>
+                </div>
+
+                <form method="POST" class="mt-3">
+                    <input type="hidden" name="delete_token" value="true">
+                    <button type="submit" class="btn btn-outline-danger">
+                        <i class="fas fa-trash-alt"></i> 刪除此連結
+                    </button>
+                </form>
+                {% else %}
+                <form method="POST">
+                    <input type="hidden" name="generate_token" value="true">
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-link"></i> 產生專屬連結
+                    </button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+
         <div class="card shadow-sm mb-4">
             <div class="card-header bg-danger text-white">
                 <h4 class="card-title mb-0">重置進度</h4>
@@ -64,6 +102,7 @@
                 <p><i class="fas fa-lightbulb text-warning"></i> 考慮使用1年（365天）作為第一個目標。</p>
                 <p><i class="fas fa-lightbulb text-warning"></i> 如果進度落後，不要氣餒，可以調整目標天數。</p>
                 <p><i class="fas fa-lightbulb text-warning"></i> 養成每天固定時間閱讀的習慣。</p>
+                <p><i class="fas fa-lightbulb text-warning"></i> 使用專屬連結可以快速登入，省去輸入帳密的時間。</p>
             </div>
         </div>
     </div>
@@ -88,6 +127,23 @@ $(document).ready(function() {
             // 如果輸入無效，顯示預設值或空值
             $('#chapters_per_day_display').text('--');
         }
+    });
+
+    // 複製連結按鈕功能
+    $('#copy_link_btn').on('click', function() {
+        var copyText = document.getElementById("auto_login_url");
+        copyText.select();
+        copyText.setSelectionRange(0, 99999); // For mobile devices
+        navigator.clipboard.writeText(copyText.value);
+
+        // 顯示複製成功提示
+        var originalText = $(this).html();
+        $(this).html('<i class="fas fa-check"></i> 已複製');
+
+        // 2秒後復原按鈕文字
+        setTimeout(function() {
+            $('#copy_link_btn').html(originalText);
+        }, 2000);
     });
 });
 </script>

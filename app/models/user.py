@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+import secrets
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from app import db, login_manager
@@ -14,6 +15,7 @@ class User(UserMixin, db.Model):
     is_admin = db.Column(db.Boolean, default=False)
     start_date = db.Column(db.Date, default=datetime.utcnow().date)
     target_days = db.Column(db.Integer, default=365)  # Default to 1 year
+    auto_login_token = db.Column(db.String(255), unique=True, index=True)  # Added for auto-login feature
 
     # Reading progress
     progresses = db.relationship('ReadingProgress', backref='user', lazy='dynamic')
@@ -86,6 +88,28 @@ class User(UserMixin, db.Model):
             return 0
 
         return total_chapters / self.target_days
+
+    def generate_auto_login_token(self):
+        """Generate a secure token for automatic login"""
+        self.auto_login_token = secrets.token_urlsafe(32)
+        db.session.commit()
+        return self.auto_login_token
+
+    def clear_auto_login_token(self):
+        """Remove the auto-login token"""
+        self.auto_login_token = None
+        db.session.commit()
+
+    def get_auto_login_url(self, request_base_url):
+        """Get the full auto-login URL including domain"""
+        from flask import url_for
+        if not self.auto_login_token:
+            return None
+
+        # Extract the base URL (domain) from the request
+        base_url = request_base_url.split('/')[0] + '//' + request_base_url.split('/')[2]
+        token_url = url_for('auth.auto_login', token=self.auto_login_token, _external=False)
+        return f"{base_url}{token_url}"
 
 @login_manager.user_loader
 def load_user(user_id):

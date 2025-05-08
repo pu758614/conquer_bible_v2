@@ -42,6 +42,8 @@ def settings():
         start_date_str = request.form.get('start_date')
         target_days = request.form.get('target_days')
         reset = request.form.get('reset')
+        generate_token = request.form.get('generate_token')
+        delete_token = request.form.get('delete_token')
 
         # Handle form submission
         if start_date_str:
@@ -65,6 +67,16 @@ def settings():
             ReadingProgress.query.filter_by(user_id=current_user.id).delete()
             flash('閱讀進度已重置', 'success')
 
+        # Handle token generation
+        if generate_token == 'true':
+            current_user.generate_auto_login_token()
+            flash('自動登入連結已生成', 'success')
+
+        # Handle token deletion
+        if delete_token == 'true':
+            current_user.clear_auto_login_token()
+            flash('自動登入連結已刪除', 'success')
+
         from app import db
         db.session.commit()
         flash('設定已更新', 'success')
@@ -76,10 +88,16 @@ def settings():
     target_days = current_user.target_days or 365
     chapters_per_day = total_chapters / target_days
 
+    # Get auto-login URL if token exists
+    auto_login_url = None
+    if current_user.auto_login_token:
+        auto_login_url = current_user.get_auto_login_url(request.base_url)
+
     context = {
         'user': current_user,
         'total_chapters': total_chapters,
-        'chapters_per_day': round(chapters_per_day, 1)
+        'chapters_per_day': round(chapters_per_day, 1),
+        'auto_login_url': auto_login_url
     }
 
     return render_template('main/settings.html', **context)

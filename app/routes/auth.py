@@ -85,3 +85,19 @@ def logout():
     logout_user()
     flash('您已成功登出', 'success')
     return redirect(url_for('auth.login'))
+
+@auth.route('/auto-login/<token>')
+def auto_login(token):
+    """Handle automatic login with token"""
+    if current_user.is_authenticated:
+        return redirect(url_for('main.dashboard'))
+
+    user = User.query.filter_by(auto_login_token=token).first()
+
+    if not user:
+        flash('無效的登入連結', 'danger')
+        return redirect(url_for('auth.login'))
+
+    login_user(user)
+    flash(f'歡迎回來，{user.name}！', 'success')
+    return redirect(url_for('main.dashboard'))
