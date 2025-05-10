@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}輸入PIN碼 - 征服聖經{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">輸入PIN碼</h4>
+            </div>
+            <div class="card-body">
+                <p>請輸入您的數字PIN碼以完成自動登入。</p>
+
+                <form method="GET" action="{{ url_for('auth.auto_login', token=token) }}">
+                    <div class="mb-3">
+                        <label for="pin" class="form-label">PIN碼</label>
+                        <input type="password" class="form-control" id="pin" name="pin"
+                               placeholder="請輸入您的PIN碼" required maxlength="6"
+                               pattern="[0-9]*" inputmode="numeric" autofocus>
+                        <small class="text-muted">請輸入您設定的4-6位數字PIN碼</small>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">登入</button>
+                    </div>
+                    <div class="mt-3 text-center">
+                        <a href="{{ url_for('auth.login') }}" class="text-decoration-none">
+                            <i class="fas fa-arrow-left"></i> 返回正常登入
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

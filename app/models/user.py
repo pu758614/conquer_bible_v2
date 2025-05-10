@@ -16,6 +16,7 @@ class User(UserMixin, db.Model):
     start_date = db.Column(db.Date, default=datetime.utcnow().date)
     target_days = db.Column(db.Integer, default=365)  # Default to 1 year
     auto_login_token = db.Column(db.String(255), unique=True, index=True)  # Added for auto-login feature
+    auto_login_pin = db.Column(db.String(6))  # PIN code for auto-login
 
     # Reading progress
     progresses = db.relationship('ReadingProgress', backref='user', lazy='dynamic')
@@ -89,15 +90,20 @@ class User(UserMixin, db.Model):
 
         return total_chapters / self.target_days
 
-    def generate_auto_login_token(self):
+    def generate_auto_login_token(self, pin=None):
         """Generate a secure token for automatic login"""
+        if not pin or not pin.isdigit() or len(pin) < 4 or len(pin) > 6:
+            return None
+
         self.auto_login_token = secrets.token_urlsafe(32)
+        self.auto_login_pin = pin
         db.session.commit()
         return self.auto_login_token
 
     def clear_auto_login_token(self):
         """Remove the auto-login token"""
         self.auto_login_token = None
+        self.auto_login_pin = None
         db.session.commit()
 
     def get_auto_login_url(self, request_base_url):

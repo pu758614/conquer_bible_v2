@@ -61,6 +61,14 @@
                     <small class="text-muted">點擊複製按鈕將連結複製到剪貼簿</small>
                 </div>
 
+                <div class="mb-3">
+                    <label class="form-label">PIN碼</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" value="{{ user.auto_login_pin or '尚未設定PIN碼' }}" readonly>
+                    </div>
+                    <small class="text-muted">此PIN碼需要在使用專屬連結登入時輸入</small>
+                </div>
+
                 <form method="POST" class="mt-3">
                     <input type="hidden" name="delete_token" value="true">
                     <button type="submit" class="btn btn-outline-danger">
@@ -70,6 +78,14 @@
                 {% else %}
                 <form method="POST">
                     <input type="hidden" name="generate_token" value="true">
+
+                    <div class="mb-3">
+                        <label for="pin_code" class="form-label">設定數字PIN碼</label>
+                        <input type="password" id="pin_code" name="pin_code" class="form-control"
+                               placeholder="請輸入4-6位數字PIN碼" pattern="[0-9]{4,6}" maxlength="6" required>
+                        <small class="text-muted">設定一個4-6位的數字PIN碼，使用專屬連結登入時需要輸入此PIN碼</small>
+                    </div>
+
                     <button type="submit" class="btn btn-success">
                         <i class="fas fa-link"></i> 產生專屬連結
                     </button>

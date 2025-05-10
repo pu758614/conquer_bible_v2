@@ -44,6 +44,7 @@ def settings():
         reset = request.form.get('reset')
         generate_token = request.form.get('generate_token')
         delete_token = request.form.get('delete_token')
+        pin_code = request.form.get('pin_code')
 
         # Handle form submission
         if start_date_str:
@@ -69,8 +70,11 @@ def settings():
 
         # Handle token generation
         if generate_token == 'true':
-            current_user.generate_auto_login_token()
-            flash('自動登入連結已生成', 'success')
+            if not pin_code or not pin_code.isdigit() or len(pin_code) < 4 or len(pin_code) > 6:
+                flash('請設定4-6位數字PIN碼', 'danger')
+            else:
+                current_user.generate_auto_login_token(pin=pin_code)
+                flash('自動登入連結已生成', 'success')
 
         # Handle token deletion
         if delete_token == 'true':

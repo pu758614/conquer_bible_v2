@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request
+from flask import Blueprint, render_template, redirect, url_for, flash, request, session
 from flask_login import login_user, logout_user, login_required, current_user
 from app import db
 from app.models.user import User
@@ -97,6 +97,33 @@ def auto_login(token):
     if not user:
         flash('無效的登入連結', 'danger')
         return redirect(url_for('auth.login'))
+
+    # Check if pin is in the URL parameters
+    pin = request.args.get('pin')
+
+    # Initialize session for tracking PIN attempts if not present
+    session_key = f'pin_attempts_{token}'
+    if session_key not in session:
+        session[session_key] = 0
+
+    # If there's no PIN in the URL and user has a PIN set, show PIN form
+    if not pin and user.auto_login_pin:
+        return render_template('auth/enter_pin.html', token=token)
+
+    # Check if too many failed attempts (limit to 5)
+    if session[session_key] >= 5:
+        flash('嘗試次數過多，請稍後再試', 'danger')
+        return redirect(url_for('auth.login'))
+
+    # If PIN is provided, verify it
+    if user.auto_login_pin and pin != user.auto_login_pin:
+        session[session_key] += 1
+        flash(f'PIN碼錯誤，剩餘嘗試次數：{5 - session[session_key]}', 'danger')
+        return render_template('auth/enter_pin.html', token=token)
+
+    # Reset attempts counter on successful login
+    if session_key in session:
+        session.pop(session_key)
 
     login_user(user)
     flash(f'歡迎回來，{user.name}！', 'success')
